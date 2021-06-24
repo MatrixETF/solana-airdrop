@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Matrix solana Airdrop (test)</h2>
+<input type="text" id="address" placeholder="your address"/>
+
+<select id="coin-select" >
+  <option value="SOL">SOL</option>
+  <option value="WSOL">WSOL</option>
+  <option value="ETH">ETH</option>
+  <option value="BTC">BTC</option>
+</select>
+<input type="button" onclick="airdrop(this.value)" value="submit"/>
+
+<p id="demo"></p>
+<script>
+  function airdrop() {
+    const dbParam = JSON.stringify(
+            {"address" :document.getElementById("address").value,
+              "coin" :document.getElementById("coin-select").value});
+    const xmlhttp = new XMLHttpRequest();
+    xmlhttp.onload = function() {
+      const myObj = JSON.parse(this.responseText);
+      let text = "<table border='1'>"
+      text += "<tr><td>" + myObj + "</td></tr>";
+      text += "</table>"
+      document.getElementById("demo").innerHTML = text;
+    }
+    xmlhttp.open("POST", "http://18.166.242.198:3001");
+    xmlhttp.setRequestHeader("Content-type", "application/json");
+    xmlhttp.send(dbParam);
+  }
+</script>
+</body>
+</html>

@@ -1,5 +1,9 @@
 import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+
+
+
 import {
   Connection,
   clusterApiUrl,
@@ -18,6 +22,7 @@ import {
 dotenv.config();
 
 const app: Application = express();
+app.options('*', cors());
 app.use(express.json());
 
 const port = process.env.PORT;
@@ -60,7 +65,11 @@ const connection = new Connection(clusterApiUrl(network));
 const ACCOUNT = new Account(privateKey.split(",").map((k) => parseInt(k)));
 const OWNER = ACCOUNT.publicKey;
 
-app.get("/", (req: Request, res: Response) => {
+
+
+app.use('', express.static('./'));
+
+app.get("/", async (req: Request, res: Response) => {
   res.json({ success: true, data: `MatrixETF ${network} Airdrop API` });
 });
 
