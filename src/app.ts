@@ -12,6 +12,7 @@ import {
   isValidPublicKey,
   transferToken,
   findAssociatedTokenAddress,
+  createAssociatedTokenAccount,
 } from "./utils";
 
 // initialize configuration
@@ -91,14 +92,20 @@ app.post("/", async (req: Request, res: Response) => {
   } else {
     const { mint, decimals } = COINS[coin];
 
-    const source = await findAssociatedTokenAddress(OWNER, new PublicKey(mint));
+    const mintPublicKey = new PublicKey(mint);
+
+    const source = await findAssociatedTokenAddress(OWNER, mintPublicKey);
 
     let destination = new PublicKey(address);
-    const { data } = await connection.getAccountInfo(new PublicKey(address));
+    let userOwner;
+
+    const { data } = await connection.getAccountInfo(destination);
+    // address is native account
     if (data.length === 0) {
+      userOwner = destination;
       destination = await findAssociatedTokenAddress(
-        new PublicKey(address),
-        new PublicKey(mint)
+        destination,
+        mintPublicKey
       );
     }
 
@@ -106,7 +113,17 @@ app.post("/", async (req: Request, res: Response) => {
 
     const transaction = new Transaction({
       recentBlockhash: recentBlockhash.blockhash,
-    }).add(
+    });
+
+    const tokenAccountInfo = await connection.getAccountInfo(destination);
+    // token account not exist
+    if (!tokenAccountInfo) {
+      transaction.add(
+        await createAssociatedTokenAccount(OWNER, mintPublicKey, userOwner)
+      );
+    }
+
+    transaction.add(
       transferToken({
         source,
         dest: destination,
