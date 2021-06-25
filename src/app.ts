@@ -68,7 +68,7 @@ const OWNER = ACCOUNT.publicKey;
 
 
 
-app.use('', express.static('./'));
+app.use('', express.static('./page'));
 
 app.get("/", async (req: Request, res: Response) => {
   res.json({ success: true, data: `MatrixETF ${network} Airdrop API` });
