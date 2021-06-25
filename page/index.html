@@ -23,11 +23,11 @@
     xmlhttp.onload = function() {
       const myObj = JSON.parse(this.responseText);
       let text = "<table border='1'>"
-      text += "<tr><td>" + JSON.stringify(myObj) + "</td></tr>";
+      text += "<tr><td>" + JSON.stringify(myObj) + "</td><zzz/tr>";
       text += "</table>"
       document.getElementById("demo").innerHTML = text;
     }
-    xmlhttp.open("POST", "http://faucet.matrixetf.finance:3001");
+    xmlhttp.open("POST", "https://faucet.matrixetf.finance");
     xmlhttp.setRequestHeader("Content-type", "application/json");
     xmlhttp.send(dbParam);
   }
