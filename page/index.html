@@ -23,7 +23,7 @@
     xmlhttp.onload = function() {
       const myObj = JSON.parse(this.responseText);
       let text = "<table border='1'>"
-      text += "<tr><td>" + myObj + "</td></tr>";
+      text += "<tr><td>" + JSON.stringify(myObj) + "</td></tr>";
       text += "</table>"
       document.getElementById("demo").innerHTML = text;
     }
